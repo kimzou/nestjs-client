@@ -1,12 +1,27 @@
+import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/react-hooks';
+// import { createHttpLink } from 'apollo-link-http';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Main from './components/App';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+const link =  createHttpLink({
+  credentials: 'same-origin',
+  uri: "http://localhost:3001/graphql"
+})
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ApolloProvider client={client}>
+      <Main />
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
