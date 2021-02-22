@@ -1,12 +1,8 @@
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { auth } from '../firebase';
-
-interface SessionLogin {
-    idToken: string
-}
 
 const LOGIN_MUTATION = gql`
     mutation SessionLogin($idToken: String!) {
@@ -39,6 +35,8 @@ export default function SignIn() {
                         // login({
                         //     variables: { email, password }
                         // });
+                        // auth.setPersistence(auth.Persistence.NONE);
+
                         auth.signInWithEmailAndPassword(email, password)
                             .then(({ user }) => {
                                 console.log({ user })
@@ -46,7 +44,7 @@ export default function SignIn() {
                                     .then(idToken => {
                                         console.log({idToken})
                                         sessionLogin({ variables: { idToken } })
-                                        .then(cookie => console.log({cookie}))
+                                        .then(cookie => auth.signOut())
                                     })
                             })
                     }}>
@@ -63,8 +61,9 @@ export default function SignIn() {
                 </Card.Body>
             </Card>
             <div className='text-center'>
-                Vous possedez déjà un compte ? Connectez-vous.
+                Vous possedez pas de compte ?.
             </div>
+            <Button href='/register'>Inscription</Button>
         </>
     )
 }

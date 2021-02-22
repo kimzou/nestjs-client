@@ -1,5 +1,5 @@
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/react-hooks';
-// import { createHttpLink } from 'apollo-link-http';
+import { ApolloClient, ApolloProvider, createHttpLink, GraphQLRequest, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -7,14 +7,25 @@ import Main from './components/App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
-const link =  createHttpLink({
-  credentials: 'same-origin',
-  uri: "http://localhost:3001/graphql"
+const httpLink =  createHttpLink({
+  credentials: 'include',
+  uri: 'http://localhost:3001/graphql',
+});
+
+const authLink = setContext((operation: GraphQLRequest, prevContext) => {
+  const context = operation.context;
+  const headers = context?.response.headers
+  console.log({ context, headers })
+  console.log({ prevContext })
+  console.log({ operation })
 })
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link
+  // credentials: 'include',
+  // uri: 'http://localhost:3001/graphql',
+  link: authLink.concat(httpLink)
+  // link: httpLink
 });
 
 ReactDOM.render(
