@@ -1,5 +1,4 @@
-import { ApolloClient, ApolloProvider, createHttpLink, GraphQLRequest, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -7,24 +6,24 @@ import Main from './components/App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
-const httpLink =  createHttpLink({
-  credentials: 'include',
-  uri: 'http://localhost:3001/graphql',
-});
+// const httpLink =  createHttpLink({
+//   credentials: 'include',
+//   uri: 'http://localhost:3001/graphql',
+// });
 
-const authLink = setContext((operation: GraphQLRequest, prevContext) => {
-  const context = operation.context;
-  const headers = context?.response.headers
-  console.log({ context, headers })
-  console.log({ prevContext })
-  console.log({ operation })
-})
+// const authLink = setContext((operation: GraphQLRequest, prevContext) => {
+//   const context = operation.context;
+//   const headers = context?.response.headers
+//   console.log({ context, headers })
+//   console.log({ prevContext })
+//   console.log({ operation })
+// })
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  // credentials: 'include',
-  // uri: 'http://localhost:3001/graphql',
-  link: authLink.concat(httpLink)
+  credentials: 'include',
+  uri: 'http://localhost:3001/graphql',
+  // link: authLink.concat(httpLink)
   // link: httpLink
 });
 

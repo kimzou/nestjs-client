@@ -5,8 +5,8 @@ import { Button, Card, Form } from 'react-bootstrap';
 import { auth } from '../firebase';
 
 const LOGIN_MUTATION = gql`
-    mutation SessionLogin($idToken: String!) {
-        sessionLogin(idToken: $idToken)
+    mutation login($idToken: String!) {
+        login(idToken: $idToken)
     }
 `;
 
@@ -14,13 +14,13 @@ export default function SignIn() {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
 
-    const [sessionLogin, { loading, error, data }] = useMutation(LOGIN_MUTATION, {
+    const [login, { loading, error, data }] = useMutation(LOGIN_MUTATION, {
         onError(error) {
             console.log('Error : ', error)
         },
         async onCompleted(data) {
-            if (data?.sessionLogin?.error) {
-                alert(data.sessionLogin.error);
+            if (data?.login?.error) {
+                alert(data.login.error);
             }
         }
     });
@@ -43,8 +43,9 @@ export default function SignIn() {
                                 return user?.getIdToken()
                                     .then(idToken => {
                                         console.log({idToken})
-                                        sessionLogin({ variables: { idToken } })
+                                        login({ variables: { idToken } })
                                         .then(cookie => auth.signOut())
+                                        .catch(error => console.log('Catch error: ', error))
                                     })
                             })
                     }}>
@@ -63,7 +64,10 @@ export default function SignIn() {
             <div className='text-center'>
                 Vous possedez pas de compte ?.
             </div>
-            <Button href='/register'>Inscription</Button>
+            <br />
+            <div className='text-center'>
+                <Button href='/register' variant='outline-primary'>Inscription</Button>
+            </div>
         </>
     )
 }
