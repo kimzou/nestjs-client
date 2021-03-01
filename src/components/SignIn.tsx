@@ -5,8 +5,13 @@ import { Button, Card, Form } from 'react-bootstrap';
 import { auth } from '../firebase';
 
 const LOGIN_MUTATION = gql`
-    mutation login($idToken: String!) {
-        login(idToken: $idToken)
+    # mutation login($idToken: String!) {
+    #     login(idToken: $idToken)
+    # }
+    mutation login($loginInput: LoginInput!) {
+        login(loginInput: $loginInput) {
+            idToken
+        }
     }
 `;
 
@@ -43,7 +48,7 @@ export default function SignIn() {
                                 return user?.getIdToken()
                                     .then(idToken => {
                                         console.log({idToken})
-                                        login({ variables: { idToken } })
+                                        login({ variables: { loginInput: { idToken } } })
                                         .then(cookie => auth.signOut())
                                         .catch(error => console.log('Catch error: ', error))
                                     })

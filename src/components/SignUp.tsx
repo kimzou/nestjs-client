@@ -7,9 +7,7 @@ import { auth } from '../firebase';
 
 const REGISTER = gql`
     mutation register($firebaseUserCredentialInput: FirebaseUserCredentialInput!, $idToken: String!) {
-        register(firebaseUserCredentialInput: $firebaseUserCredentialInput, idToken: $idToken) {
-            name
-        }
+        register(firebaseUserCredentialInput: $firebaseUserCredentialInput, idToken: $idToken)
     }
 `;
 export default function SignUp() {
