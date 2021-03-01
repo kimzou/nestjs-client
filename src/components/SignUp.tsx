@@ -6,8 +6,10 @@ import { useHistory } from 'react-router-dom';
 import { auth } from '../firebase';
 
 const REGISTER = gql`
-    mutation register($firebaseUserCredentialInput: FirebaseUserCredentialInput!, $idToken: String!) {
-        register(firebaseUserCredentialInput: $firebaseUserCredentialInput, idToken: $idToken)
+    mutation register($registerInput: RegisterInput!) {
+        register(registerInput: $registerInput) {
+            idToken
+        }
     }
 `;
 export default function SignUp() {
@@ -37,8 +39,7 @@ export default function SignUp() {
                                         const { displayName, email, uid } = user;
                                         register({
                                             variables: {
-                                                firebaseUserCredentialInput: { displayName, email, uid },
-                                                idToken
+                                                registerInput: { displayName, email, uid, idToken },
                                             }
                                         })
                                         .then(async () => await auth.signOut())
