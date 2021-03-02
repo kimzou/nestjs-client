@@ -10,7 +10,7 @@ const LOGIN_MUTATION = gql`
     # }
     mutation login($loginInput: LoginInput!) {
         login(loginInput: $loginInput) {
-            idToken
+            name
         }
     }
 `;
@@ -45,11 +45,17 @@ export default function SignIn() {
                         auth.signInWithEmailAndPassword(email, password)
                             .then(({ user }) => {
                                 console.log({ user })
+                                const uid = user?.uid
                                 return user?.getIdToken()
                                     .then(idToken => {
                                         console.log({idToken})
-                                        login({ variables: { loginInput: { idToken } } })
-                                        .then(cookie => auth.signOut())
+                                        login({variables: {
+                                            loginInput: { idToken, uid }
+                                        }})
+                                        .then(({ data: { login } }) => {
+                                            console.log({ login })
+                                            auth.signOut()
+                                        })
                                         .catch(error => console.log('Catch error: ', error))
                                     })
                             })

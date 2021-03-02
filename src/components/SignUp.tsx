@@ -2,19 +2,17 @@ import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
 import { auth } from '../firebase';
 
 const REGISTER = gql`
     mutation register($registerInput: RegisterInput!) {
         register(registerInput: $registerInput) {
-            idToken
+            name
         }
     }
 `;
 export default function SignUp() {
 
-    const history = useHistory()
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [name, setName] = useState<string>('')
@@ -42,7 +40,10 @@ export default function SignUp() {
                                                 registerInput: { displayName, email, uid, idToken },
                                             }
                                         })
-                                        .then(async () => await auth.signOut())
+                                        .then(({ data: { register } }) =>  {
+                                            console.log({ register })
+                                            auth.signOut()
+                                        })
                                         .catch(error => console.log('Catch error', error))
                                     }
                                 } catch (error) {
