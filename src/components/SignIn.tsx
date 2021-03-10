@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 import { auth } from '../firebase';
 
 const LOGIN_MUTATION = gql`
@@ -16,6 +17,8 @@ const LOGIN_MUTATION = gql`
 `;
 
 export default function SignIn() {
+    const history = useHistory();
+
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
 
@@ -54,7 +57,8 @@ export default function SignIn() {
                                         }})
                                         .then(({ data: { login } }) => {
                                             console.log({ login })
-                                            auth.signOut()
+                                            auth.signOut();
+                                            history.push('/users')
                                         })
                                         .catch(error => console.log('Catch error: ', error))
                                     })

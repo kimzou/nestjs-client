@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 import { auth } from '../firebase';
 
 const REGISTER = gql`
@@ -12,6 +13,7 @@ const REGISTER = gql`
     }
 `;
 export default function SignUp() {
+    const history = useHistory();
 
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
@@ -63,7 +65,7 @@ export default function SignUp() {
                             <Form.Label>Mot de passe</Form.Label>
                             <Form.Control type='password' value={password} onChange={e => setPassword(e.target.value)} required />
                         </Form.Group>
-                        <Button type='submit'>S'inscrire</Button>
+                        <Button type='submit' onClick={() => history.push('/users')}>S'inscrire</Button>
                     </Form>
                 </Card.Body>
             </Card>
