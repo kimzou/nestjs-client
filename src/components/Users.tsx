@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { gql } from 'graphql-tag';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 
 const GET_ALL_USERS = gql`
@@ -35,6 +35,9 @@ const Users = () => {
     const { loading, error, data } = useQuery(GET_ALL_USERS, {
         onError(error) {
             console.error('OnError :', error)
+            if (error.message === 'Forbidden resource') {
+                alert('Vous ne disposer pas des autorisations nécessaire pour accéder à ce contenu')
+            }
         },
         onCompleted({ getUsers }) {
             console.log({getUsers})
@@ -53,15 +56,16 @@ const Users = () => {
                             </Card.Title>
                         </Card.Header>
                         <Card.Body>
-                            <Card.Text>
-                                { user.posts?.length > 0 ? user.posts.map(post => {
-                                return <p key={post.id}>{` • ${post.title}`}</p>
-                                }) : <p style={{ color: 'red' }}>This user hasn't post anything yet</p>}
-                            </Card.Text>
+                            { user.posts?.length > 0
+                                ? user.posts.map(post => {
+                                    return <Card.Text key={post.id}>{` • ${post.title}`}</Card.Text>
+                                })
+                                : <Card.Text style={{ color: 'red' }}>This user hasn't post anything yet</Card.Text>
+                            }
                         </Card.Body>
                     </Card>
                 )
-            }) : <h2>NOT AUTHORIZED</h2>}
+            }) : <h2>NOT AUTHORIZED</h2> }
             <br />
         </>
     )

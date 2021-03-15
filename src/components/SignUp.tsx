@@ -21,6 +21,16 @@ export default function SignUp() {
 
     const [register] = useMutation(REGISTER);
 
+    const registerFunc = async ({ ...variables }) => {
+        try {
+            await register({variables: {
+                registerInput: { ...variables },
+            } })
+        } catch (error) {
+            console.error('Catch error on register: ', error)
+        }
+    }
+
     return (
         <>
             <Card>
@@ -37,16 +47,7 @@ export default function SignUp() {
                                     console.log({idToken})
                                     if (user) {
                                         const { displayName, email, uid } = user;
-                                        register({
-                                            variables: {
-                                                registerInput: { displayName, email, uid, idToken },
-                                            }
-                                        })
-                                        .then(({ data: { register } }) =>  {
-                                            console.log({ register })
-                                            auth.signOut()
-                                        })
-                                        .catch(error => console.log('Catch error', error))
+                                        registerFunc({ displayName, email, uid })
                                     }
                                 } catch (error) {
                                     console.log('Catch :', error)
